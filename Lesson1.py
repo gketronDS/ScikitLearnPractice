@@ -14,10 +14,13 @@
 #2. X = data to build prediction on, Y = set to test prediction against.
 #Practice use case is house price prediction. X = info about house Y = prices
 #3. Pass to model to build prediction.
-import numpy as np
-import pandas as pd
+import numpy 
+import pandas
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import fetch_california_housing
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import GridSearchCV
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -27,7 +30,33 @@ from sklearn.neighbors import KNeighborsRegressor
 import matplotlib.pylab as plt
 
 model = KNeighborsRegressor().fit(X, y)
-pred = model.predict(X)
+
+pipe = Pipeline([
+    ("scale", StandardScaler()),
+    ("model", KNeighborsRegressor(n_neighbors=1))
+])
+pipe.get_params()
+#Turn Pipeline into a grid search w paramgrid be 
+mod = GridSearchCV(estimator=pipe,
+                   param_grid={'model__n_neighbors': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]},
+                   cv=3)
+
+mod.fit(X, y)
+cvresult = pandas.DataFrame(mod.cv_results_)
+print(cvresult.head())
+#Dot looks for its nearest neighbors w distance.
+# Prediction is average of 5 nearest neighbors. 
+# What if the number scales are different? 
+# That axis has a much bigger effect. 
+# Rethink model, with preprocessing on the X before it gets to the model
+# scale and knearestneighbor is the new model. Pipeline gets considered the model in,
+# can call fit and predict off of pre processing.   
+#After scaling, need to change possible settings to optimize settings
+#you also want to compare label and prediciton. 
+#Also cut data X into 3 segments, and copy x and y 3 times. 
+#Pipeline cant handle this optimization, use a grid search CV object. 
+#used for cross validation. 
+pred = mod.predict(X)
 plt.scatter(pred, y)
 plt.show()
 
