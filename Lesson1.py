@@ -14,8 +14,8 @@
 #2. X = data to build prediction on, Y = set to test prediction against.
 #Practice use case is house price prediction. X = info about house Y = prices
 #3. Pass to model to build prediction.
-import numpy 
-import pandas
+import numpy as np
+import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import fetch_california_housing
 from sklearn.preprocessing import StandardScaler
@@ -23,9 +23,9 @@ from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
-
+print(fetch_california_housing()['DESCR'])
 X, y = fetch_california_housing(return_X_y=True)
-
+print(X.head())
 from sklearn.neighbors import KNeighborsRegressor
 import matplotlib.pylab as plt
 
@@ -42,8 +42,8 @@ mod = GridSearchCV(estimator=pipe,
                    cv=3)
 
 mod.fit(X, y)
-cvresult = pandas.DataFrame(mod.cv_results_)
-print(cvresult.head())
+cvresult = pd.DataFrame(mod.cv_results_)
+print(cvresult)
 #Dot looks for its nearest neighbors w distance.
 # Prediction is average of 5 nearest neighbors. 
 # What if the number scales are different? 
@@ -59,6 +59,11 @@ print(cvresult.head())
 pred = mod.predict(X)
 plt.scatter(pred, y)
 plt.show()
+#Not ready to go to production...
+#Need to do differently to understand what is happening in the dataset.
+
+
+
 
 #import matplotlib.pyplot as plt
 #import matplotlib.image as mpimg
