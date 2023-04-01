@@ -25,7 +25,7 @@ import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 print(fetch_california_housing()['DESCR'])
 X, y = fetch_california_housing(return_X_y=True)
-print(X.head())
+
 from sklearn.neighbors import KNeighborsRegressor
 import matplotlib.pylab as plt
 
@@ -61,8 +61,12 @@ plt.scatter(pred, y)
 plt.show()
 #Not ready to go to production...
 #Need to do differently to understand what is happening in the dataset.
+#DO NOT TRUST YOUR MODEL UNTIL YOU TRY TO EXPLOIT IT
+#Need to stress test your model predictions
+#issue with grid search
 
-
+#Hard part of DS is understanding what data is saying and what to do when
+#model is in production. Know ethics and algos (Feedback loops, and fallback scenarios)
 
 
 #import matplotlib.pyplot as plt
